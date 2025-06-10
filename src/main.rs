@@ -22,8 +22,8 @@ fn main() {
     let value = RefCell::new(treenode);
     let value = Rc::new(value);
     let mut tr = Rc::clone(&value);
-
-    for i in 0..3 {
+// 向树中插入元素
+    for _ in 0..3 {
         match TreeNode::insert_and_get_ref(&Some(tr), rng.random(), bool_to_position(b)) {
             Some(v) => tr = v,
             None => todo!(),

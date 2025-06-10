@@ -24,15 +24,19 @@ impl TreeNode {
         match node {
             None => Some(Rc::new(RefCell::new(TreeNode::new(value)))),
             Some(v) => {
+                // 创建新的节点
                 let new_node = Rc::new(RefCell::new(TreeNode::new(value)));
                 match position {
+                    // 插入到左侧
                     InsertPosition::Left => {
                         v.borrow_mut().left = Some(Rc::clone(&new_node));
                     }
+                    // 插入到右侧
                     InsertPosition::Right => {
                         v.borrow_mut().right = Some(Rc::clone(&new_node));
                     }
                 }
+                // 返回节点
                 Some(new_node)
             }
         }
