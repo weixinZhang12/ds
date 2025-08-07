@@ -9,5 +9,4 @@ mod ds {
 ///bool转插入位置
 
 fn main() {
-     // 获取当前对象的 Any 类型
 }

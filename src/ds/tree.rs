@@ -179,7 +179,7 @@ pub fn tree_insert() {
     TreeNode::print_by_dfs(&value);
 }
 #[test]
-pub fn tree_pip(){
+pub fn tree_test(){
      let treenode = TreeNode::new(1);
     let mut rng = rand::rng();
     let value = RefCell::new(treenode);
