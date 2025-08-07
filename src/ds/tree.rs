@@ -26,6 +26,7 @@ impl TreeNode {
             right: None,
         }
     }
+    #[allow(dead_code)]
     // 返回插入节点的引用，不使用克隆
     pub fn insert_and_get_ref(node: &NodeRef, value: i32, rng: &mut ThreadRng) -> NodeRef {
         match node {
@@ -53,7 +54,7 @@ impl TreeNode {
         }
     }
     // 仅仅打印值，不消耗Node
-    // #[allow(dead_code)]
+    #[allow(dead_code)]
     pub fn bfs(node: &NodeRef, deque: &mut VecDeque<Rc<RefCell<TreeNode>>>) {
         match node {
             Some(v) => {

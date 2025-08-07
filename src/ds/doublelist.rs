@@ -2,9 +2,11 @@ use std::{
     cell::RefCell,
     rc::{Rc, Weak},
 };
-
+#[allow(dead_code)]
 type NodeRef = Option<Rc<RefCell<DoubleNode>>>;
 type PeekRef = Option<Weak<RefCell<DoubleNode>>>;
+
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct DoubleNode {
     value: i32,
@@ -13,6 +15,8 @@ pub struct DoubleNode {
 }
 
 impl DoubleNode {
+
+#[allow(dead_code)]
     pub fn new(value: i32) -> Self {
         Self {
             value,

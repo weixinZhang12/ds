@@ -1,5 +1,5 @@
 use std::{
-    cell::{Ref, RefCell},
+    cell::RefCell,
     rc::Rc,
 };
 
@@ -14,6 +14,7 @@ pub struct LinkNode {
 }
 
 impl LinkNode {
+    ///新建一个linknode
     pub fn new(value: i32) -> Self {
         Self { value, next: None }
     }
