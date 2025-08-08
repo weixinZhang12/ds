@@ -50,7 +50,7 @@ impl LinkNode {
     }
 }
 #[test]
-pub fn insert() {
+pub fn linklist_test() {
     let node = LinkNode::new(0);
     let mut node = Rc::new(RefCell::new(node));
     let mut rng = rand::rng();
