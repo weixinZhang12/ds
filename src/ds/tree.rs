@@ -56,51 +56,45 @@ impl TreeNode {
     // 仅仅打印值，不消耗Node
     #[allow(dead_code)]
     pub fn bfs(node: &NodeRef, deque: &mut VecDeque<Rc<RefCell<TreeNode>>>) {
-        match node {
-            Some(v) => {
-                // 如果节点有值，压入队列
-                let node = Rc::clone(v);
-                deque.push_back(node);
-                // 如果没有元素，那么遍历完毕
-                while let Some(v) = &deque.pop_front() {
-                    let temp = v.borrow();
-                    let left = &temp.left;
-                    let right = &temp.right;
-                    if left.is_none() && right.is_none() {
-                        println!("{}->None", temp.value);
-                    }
-                    // 有左节点就压入
-                    if let Some(v) = left {
-                        let value = v.borrow();
-                        println!("{} -> {} (left)", temp.value, value.value);
-                        deque.push_back(Rc::clone(&v));
-                    }
-                    // 有右节点就压入
-                    if let Some(v) = right {
-                        let value = v.borrow();
-                        println!("{} -> {}(right)", temp.value, value.value);
-                        deque.push_back(Rc::clone(&v));
-                    }
+        if let Some(v) = node {
+            // 如果节点有值，压入队列
+            let node = Rc::clone(v);
+            deque.push_back(node);
+            // 如果没有元素，那么遍历完毕
+            while let Some(v) = &deque.pop_front() {
+                let temp = v.borrow();
+                let left = &temp.left;
+                let right = &temp.right;
+                if left.is_none() && right.is_none() {
+                    println!("{}->None", temp.value);
+                }
+                // 有左节点就压入
+                if let Some(v) = left {
+                    let value = v.borrow();
+                    println!("{} -> {} (left)", temp.value, value.value);
+                    deque.push_back(Rc::clone(&v));
+                }
+                // 有右节点就压入
+                if let Some(v) = right {
+                    let value = v.borrow();
+                    println!("{} -> {}(right)", temp.value, value.value);
+                    deque.push_back(Rc::clone(&v));
                 }
             }
-            None => {}
         }
     }
     pub fn dfs(node: &NodeRef, arr: &mut Vec<Rc<RefCell<TreeNode>>>) {
-        match node {
-            Some(v) => {
-                let value = v.borrow();
-                if let Some(v) = &value.left {
-                    let v = Rc::clone(v);
-                    Self::dfs(&Some(v), arr);
-                }
-                if let Some(v) = &value.right {
-                    let v = Rc::clone(v);
-                    Self::dfs(&Some(v), arr);
-                }
-                println!("{}", value.value)
+        if let Some(v) = node {
+            let value = v.borrow();
+            if let Some(v) = &value.left {
+                let v = Rc::clone(v);
+                Self::dfs(&Some(v), arr);
             }
-            None => return,
+            if let Some(v) = &value.right {
+                let v = Rc::clone(v);
+                Self::dfs(&Some(v), arr);
+            }
+            println!("{}", value.value)
         }
     }
     pub fn print_by_bfs(node: &Rc<RefCell<TreeNode>>) {
@@ -128,29 +122,19 @@ impl TreeNode {
         }
     }
     pub fn in_order(node: &NodeRef) {
-        match node {
-            Some(value) => {
-                let node = value.borrow();
-                TreeNode::in_order(&node.left);
-                print!("{} ", node.value);
-                TreeNode::in_order(&node.right);
-            }
-            None => {
-                return;
-            }
+        if let Some(value) = node {
+            let node = value.borrow();
+            TreeNode::in_order(&node.left);
+            print!("{} ", node.value);
+            TreeNode::in_order(&node.right);
         }
     }
     pub fn post_order(node: &NodeRef) {
-        match node {
-            Some(value) => {
-                let node = value.borrow();
-                TreeNode::post_order(&node.left);
-                TreeNode::post_order(&node.right);
-                print!("{} ", node.value);
-            }
-            None => {
-                return;
-            }
+        if let Some(value) = node {
+            let node = value.borrow();
+            TreeNode::post_order(&node.left);
+            TreeNode::post_order(&node.right);
+            print!("{} ", node.value);
         }
     }
 }
@@ -180,8 +164,8 @@ pub fn tree_insert() {
     TreeNode::print_by_dfs(&value);
 }
 #[test]
-pub fn tree_test(){
-     let treenode = TreeNode::new(1);
+pub fn tree_test() {
+    let treenode = TreeNode::new(1);
     let mut rng = rand::rng();
     let value = RefCell::new(treenode);
     let value = Rc::new(value);
