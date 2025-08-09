@@ -1,9 +1,6 @@
+use std::sync::{Arc, LazyLock, RwLock};
 
 
-// use Vector::Vector;
-// static rng:LazyLock<RwLock<ThreadRng>>=LazyLock::new(||{
-//    RwLock::new( rand::rng())
-// });
 mod ds {
     pub mod tree;
     pub mod linklist;
@@ -16,5 +13,4 @@ mod course{
 
 
 fn main() {
-
 }
