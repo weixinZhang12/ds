@@ -39,7 +39,6 @@ impl TreeNode {
 }
 
 pub fn serialize(node: &NodeRef, s: &mut String) -> String {
-
     if let Some(node) = node {
         let node_ref = node.borrow();
         s.push_str(&format!("{}", node_ref.value));
@@ -56,10 +55,9 @@ pub fn serialize(node: &NodeRef, s: &mut String) -> String {
 pub fn serialize_deserialize_test() {
     let mut rng = rand::rng();
     let mut node = TreeNode::insert(&None, 0, &mut rng);
-    for i in 1..6 {
+    for i in 1..23 {
         node = TreeNode::insert(&node, i, &mut rng);
     }
-    println!("{:#?}",node);
     let mut s="".to_string();
     let s=serialize(&node, &mut s);
     println!("{}",s);

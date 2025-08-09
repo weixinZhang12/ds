@@ -128,7 +128,7 @@ impl TreeNode {
             print!("{} ", node.value);
             TreeNode::in_order(&node.right);
         }
-    }8
+    }
     pub fn post_order(node: &NodeRef) {
         if let Some(value) = node {
             let node = value.borrow();
