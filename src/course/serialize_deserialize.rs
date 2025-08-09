@@ -39,13 +39,21 @@ impl TreeNode {
 }
 
 pub fn serialize(node: &NodeRef, s: &mut String) -> String {
-
     if let Some(node) = node {
         let node_ref = node.borrow();
         s.push_str(&format!("{}", node_ref.value));
+        // 如果不存在左右子树，那么直接跳过输出括号
+         if let None = node_ref.left
+            && let None = node_ref.right
+        {
+            return "".to_string();
+        }
         s.push('(');
         serialize(&node_ref.left, s);
-        s.push(',');
+        // 如果不存在右子树，跳过输出逗号
+        if node_ref.right.is_some() {
+            s.push(',');
+        }
         serialize(&node_ref.right, s);
         s.push(')');
     }
@@ -59,8 +67,9 @@ pub fn serialize_deserialize_test() {
     for i in 1..6 {
         node = TreeNode::insert(&node, i, &mut rng);
     }
-    println!("{:#?}",node);
-    let mut s="".to_string();
-    let s=serialize(&node, &mut s);
-    println!("{}",s);
+    println!("{:#?}", node);
+    let mut s = "".to_string();
+    let s = serialize(&node, &mut s);
+    println!("序列化结果:");
+    println!("{}", s);
 }

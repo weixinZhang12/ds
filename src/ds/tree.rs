@@ -181,5 +181,5 @@ pub fn tree_test() {
     println!();
     TreeNode::in_order(&Some(Rc::clone(&value)));
     println!();
-    TreeNode::pre_order(&Some(Rc::clone(&value)));
+    TreeNode::post_order(&Some(Rc::clone(&value)));
 }
