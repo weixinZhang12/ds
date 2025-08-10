@@ -15,7 +15,6 @@ pub struct DoubleNode {
 }
 
 impl DoubleNode {
-    #[allow(dead_code)]
     pub fn new(value: i32) -> Self {
         Self {
             value,
