@@ -53,20 +53,26 @@ impl LinkStack {
     pub fn push(&mut self, val: i32) {
         let new_node = Rc::new(RefCell::new(LinkStackNode::new(val)));
 
-        let mut current_node = self.node.as_ref();
+        let mut current_node = None;
         // 头节点没有,直接添加节点到头节点
-        if let None = current_node {
+        if let Some(v) = &self.node {
+            current_node = Some(v.clone())
+        } else {
             self.node = Some(new_node);
-            self.len+=1;
+            self.len += 1;
             return;
         }
         // 如果有节点,判断当前节点的下一个节点是否为空,为空就把新节点加到当前节点
-        while let Some(v) = &current_node {
-            let v=v.clone();
-            let node_ref=v.borrow();
-            if let Some(v)=node_ref.next{
-            current_node=Some(v);
+        while let Some(node) = &current_node {
+            let node = node.clone();
+            let mut node_borrow: std::cell::RefMut<'_, LinkStackNode> = node.borrow_mut();
+            if node_borrow.next.is_none() {
+                node_borrow.next = Some(new_node.clone());
 
+                break;
+            }
+            if let Some(v) = &node_borrow.next {
+                current_node = Some(v.clone());
             }
         }
         // current_node = Some(&new_node);
