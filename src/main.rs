@@ -5,6 +5,7 @@ mod ds {
     pub mod tree;
     mod stack{
         pub mod sqstack;
+        pub mod linkstack;
     }
 }
 
