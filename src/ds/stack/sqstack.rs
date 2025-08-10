@@ -1,4 +1,3 @@
-
 use thiserror::Error;
 
 const MAXINDEX: usize = 100;
@@ -8,12 +7,12 @@ pub enum StackError {
     Full,
 }
 #[derive(Debug)]
-pub struct Stack {
+pub struct SqStack {
     data: [Option<i32>; MAXINDEX],
     top: usize,
 }
 
-impl Stack {
+impl SqStack {
     pub fn new() -> Self {
         Self {
             data: [None; MAXINDEX],
@@ -28,7 +27,12 @@ impl Stack {
         self.top -= 1;
         return self.data[self.top].take();
     }
-
+    pub fn first(&self) -> Option<&i32> {
+        if let Some(v) = &self.data[0] {
+            return Some(v);
+        }
+        None
+    }
     pub fn push(&mut self, val: i32) -> Result<(), StackError> {
         if self.top == MAXINDEX {
             return Err(StackError::Full);
@@ -46,17 +50,24 @@ impl Stack {
         }
         false
     }
+    pub fn is_full(&self) -> bool {
+        if self.top == MAXINDEX {
+            return true;
+        }
+        false
+    }
 }
 #[test]
 pub fn _test() {
-    let mut stack = Stack::new();
+    let mut stack = SqStack::new();
     // 将栈添加满
     for i in 0..MAXINDEX as i32 {
         if let Err(e) = stack.push(i) {
             println!("{}", e);
         }
     }
-    assert_eq!(stack.get_len(),MAXINDEX);
+    assert_eq!(stack.get_len(), MAXINDEX);
+    assert_eq!(stack.is_full(), true);
     assert_eq!(stack.is_empty(), false);
     for i in 0..MAXINDEX as i32 {
         let data = stack.pop();
@@ -66,4 +77,6 @@ pub fn _test() {
     // 查看栈是否为空
     assert_eq!(stack.get_len(), 0);
     assert_eq!(stack.is_empty(), true);
+    assert_eq!(stack.is_full(), false);
+
 }
