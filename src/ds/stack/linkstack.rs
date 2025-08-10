@@ -102,7 +102,7 @@ pub fn _test() {
         stack.push(i)
     }
     assert_eq!(stack.len, 10);
-    println!("{:?}", stack);
+    println!("{:#?}", stack);
     // assert_eq!(stack.get_len(), MAXINDEX);
     // assert_eq!(stack.is_full(), true);
     // assert_eq!(stack.is_empty(), false);
