@@ -1,8 +1,4 @@
-use std::{
-    cell::RefCell,
-    rc::Rc,
-};
-
+use std::{cell::RefCell, rc::Rc};
 
 type NodeRef = Option<Rc<RefCell<LinkNode>>>;
 // 普通单向链表实现
@@ -30,7 +26,7 @@ impl LinkNode {
             }
         }
     }
-
+    ///在头部插入
     pub fn insert_to_front(node: &mut NodeRef, value: i32) -> Rc<RefCell<LinkNode>> {
         match node {
             Some(v) => {
@@ -54,7 +50,7 @@ pub fn linklist_test() {
     let mut node = Rc::new(RefCell::new(node));
     let mut rng = rand::rng();
     for i in 1..5 {
-        node=LinkNode::insert_to_front(&mut Some(Rc::clone(&node)), i);
+        node = LinkNode::insert_to_front(&mut Some(Rc::clone(&node)), i);
     }
-    println!("{:#?}", node )
+    println!("{:#?}", node)
 }

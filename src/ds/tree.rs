@@ -22,7 +22,6 @@ impl TreeNode {
             right: None,
         }
     }
-    #[allow(dead_code)]
     // 返回插入节点的引用，不使用克隆
     pub fn auto_insert(node: &NodeRef, value: i32, rng: &mut ThreadRng) -> NodeRef {
         match node {
@@ -66,7 +65,6 @@ impl TreeNode {
     }
 
     // 广度优先遍历
-    #[allow(dead_code)]
     pub fn bfs(node: &NodeRef, deque: &mut VecDeque<Rc<RefCell<TreeNode>>>) {
         if let Some(v) = node {
             // 如果节点有值，压入队列
@@ -194,6 +192,7 @@ impl TreeNode {
         let mut _pos = InsertPosition::Left;
         // 用于存储最后一个元素
         let mut last_node = None;
+
         while let Some(c) = iter.next() {
             match c {
                 // 如果是数字
@@ -232,7 +231,6 @@ impl TreeNode {
                     temp.clear();
                     let treenode: TreeNode = TreeNode::new(node_value);
                     let treenode = Rc::new(RefCell::new(treenode));
-                    // 查看传入的节点
                     match stack.last() {
                         Some(node) => {
                             let mut node_ref = node.borrow_mut();
@@ -247,6 +245,7 @@ impl TreeNode {
                         }
                         None => {}
                     }
+                    // 查看传入的节点
                     _pos = InsertPosition::Right;
                 }
                 ')' => {
