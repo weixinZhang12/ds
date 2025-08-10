@@ -1,16 +1,12 @@
-use std::sync::{Arc, LazyLock, RwLock};
-
-
 mod ds {
-    pub mod tree;
-    pub mod linklist;
     pub mod doublelist;
+    pub mod linklist;
+    pub mod tree;
 }
 
-mod course{
-    pub mod serialize_deserialize;
+mod course {
+    // pub mod serialize_deserialize;
 }
-
 
 fn main() {
 }

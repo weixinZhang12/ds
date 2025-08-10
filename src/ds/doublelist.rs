@@ -15,8 +15,7 @@ pub struct DoubleNode {
 }
 
 impl DoubleNode {
-
-#[allow(dead_code)]
+    #[allow(dead_code)]
     pub fn new(value: i32) -> Self {
         Self {
             value,
@@ -24,12 +23,12 @@ impl DoubleNode {
             peek: None,
         }
     }
-    pub fn insert(node: &mut NodeRef, value: i32, peek: &PeekRef)->Rc<RefCell<DoubleNode>>{
+    pub fn insert(node: &mut NodeRef, value: i32, peek: &PeekRef) -> Rc<RefCell<DoubleNode>> {
         match node {
             // 如果当前节点有值，那么查找下一个节点
             Some(v) => {
-                let mut  current=v.borrow_mut();
-                let new=DoubleNode::insert(&mut current.next, value,&Some(Rc::downgrade(v)));
+                let mut current = v.borrow_mut();
+                let new = DoubleNode::insert(&mut current.next, value, &Some(Rc::downgrade(v)));
                 return new;
             }
             None => {
@@ -39,8 +38,8 @@ impl DoubleNode {
                 if let Some(v) = peek {
                     new_node.peek = Some(Weak::clone(v));
                 }
-                let temp=Rc::new(RefCell::new(new_node));
-                *node=Some(Rc::clone(&temp));
+                let temp = Rc::new(RefCell::new(new_node));
+                *node = Some(Rc::clone(&temp));
                 return temp;
             }
         }

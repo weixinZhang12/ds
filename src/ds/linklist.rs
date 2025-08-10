@@ -3,7 +3,6 @@ use std::{
     rc::Rc,
 };
 
-use rand::Rng;
 
 type NodeRef = Option<Rc<RefCell<LinkNode>>>;
 // 普通单向链表实现
