@@ -48,7 +48,6 @@ impl LinkNode {
 pub fn linklist_test() {
     let node = LinkNode::new(0);
     let mut node = Rc::new(RefCell::new(node));
-    let mut rng = rand::rng();
     for i in 1..5 {
         node = LinkNode::insert_to_front(&mut Some(Rc::clone(&node)), i);
     }
