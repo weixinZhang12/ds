@@ -23,26 +23,27 @@ impl LinkStack {
     }
     pub fn pop(&mut self) -> Option<i32> {
         // 当前节点设置为头节点
-        let mut current_node = self.node.as_ref();
+        let mut current_node = None;
         let mut is_end = false;
         let mut val = 0;
+        current_node=self.node.as_ref().and_then(|n|Some(n.clone()));
+
 
         // 如果当前节点还有节点那么继续
-        while let Some(v) = current_node {
-            current_node = Some(v);
+        while let Some(v) = current_node.clone() {
             let node_ref = v.borrow();
             // 如果当前节点下一个节点为空
-            if let None = node_ref.next {
+            if node_ref.next.is_none() {
                 is_end = true;
                 val = node_ref.val;
                 break;
             }
-            current_node=v.borrow().next.as_ref();
+            current_node = node_ref.next.clone();
         }
         if is_end {
-            let node = current_node.take();
-            return Some(val);
+            let _ = current_node.take();
             self.len -= 1;
+            return Some(val);
         }
         None
     }
