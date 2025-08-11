@@ -37,9 +37,8 @@ impl LinkStack {
         }
         // 以下部分代表栈内至少有一个节点
         // 当前节点设置为头节点
-        let mut current_node = None;
 
-        current_node = self.node.as_ref().and_then(|n| Some(n.clone()));
+        let mut current_node = self.node.as_ref().and_then(|n| Some(n.clone()));
 
         // 如果当前节点还有节点那么继续
         while let Some(current) = current_node {
@@ -49,7 +48,7 @@ impl LinkStack {
                 if cur_next_ref.next.is_none() {
                     let val = cur_next_ref.val;
                     self.len -= 1;
-                    let next_node = current_mut.next.take();
+                    current_mut.next.take();
                     return Some(val);
                 }
             }
@@ -65,11 +64,9 @@ impl LinkStack {
     }
     pub fn push(&mut self, val: i32) {
         let new_node: Rc<RefCell<LinkStackNode>> = Rc::new(RefCell::new(LinkStackNode::new(val)));
-        let mut current_node = None;
+        let mut current_node = self.node.as_ref().and_then(|n| Some(n.clone()));
         // 头节点没有,直接添加节点到头节点
-        if let Some(v) = &self.node {
-            current_node = Some(v.clone())
-        } else {
+        if current_node.is_none() {
             self.node = Some(new_node);
             self.len += 1;
             return;
@@ -114,7 +111,7 @@ pub fn _test() {
         assert_eq!(data, Some(len as i32 - 1 - i))
     }
     println!("{:?}", stack);
-    // // 查看栈是否为空
+    // 查看栈是否为空
     assert_eq!(stack.get_len(), 0);
     assert_eq!(stack.is_empty(), true);
 }
