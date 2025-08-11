@@ -7,6 +7,9 @@ mod ds {
         pub mod sqstack;
         pub mod linkstack;
     }
+    mod queue{
+        pub mod sd_queue;
+    }
 }
 
 mod course {
