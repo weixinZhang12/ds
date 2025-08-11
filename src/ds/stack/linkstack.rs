@@ -6,7 +6,6 @@ pub struct LinkStackNode {
     next: StackNodeRef,
 }
 #[derive(Debug)]
-
 pub struct LinkStack {
     node: StackNodeRef,
     len: usize,
@@ -23,9 +22,7 @@ impl LinkStack {
     }
     pub fn pop(&mut self) -> Option<i32> {
         // 如果栈内没有节点
-        if self.node.is_none() {
-            return None;
-        }
+        self.node.as_ref()?;
         // 如果栈内只有一个节点
 
         if let Some(node) = self.node.clone() {
@@ -38,7 +35,7 @@ impl LinkStack {
         // 以下部分代表栈内至少有一个节点
         // 当前节点设置为头节点
 
-        let mut current_node = self.node.as_ref().and_then(|n| Some(n.clone()));
+        let mut current_node = self.node.as_ref().map(|n| n.clone());
 
         // 如果当前节点还有节点那么继续
         while let Some(current) = current_node {
@@ -64,7 +61,7 @@ impl LinkStack {
     }
     pub fn push(&mut self, val: i32) {
         let new_node: Rc<RefCell<LinkStackNode>> = Rc::new(RefCell::new(LinkStackNode::new(val)));
-        let mut current_node = self.node.as_ref().and_then(|n| Some(n.clone()));
+        let mut current_node = self.node.as_ref().map(|n| n.clone());
         // 头节点没有,直接添加节点到头节点
         if current_node.is_none() {
             self.node = Some(new_node);
@@ -79,12 +76,12 @@ impl LinkStack {
                 node_borrow.next = Some(new_node.clone());
                 break;
             }
-            current_node = node_borrow.next.as_ref().and_then(|n| Some(n.clone()))
+            current_node = node_borrow.next.as_ref().map(|n| n.clone())
         }
         self.len += 1;
     }
     pub fn get_len(&self) -> usize {
-        return self.len;
+        self.len
     }
     pub fn is_empty(&self) -> bool {
         if self.len == 0 {
@@ -102,16 +99,16 @@ pub fn _test() {
         stack.push(i)
     }
     assert_eq!(stack.len, LEN as usize);
-    println!("{:?}", stack);
-    assert_eq!(stack.is_empty(), false);
+    println!("{stack:?}");
+    assert!(!stack.is_empty());
     let len = stack.get_len();
-    for i in 0..LEN as i32 {
+    for i in 0..LEN {
         let data = stack.pop();
         // 检查弹出元素是否正确
         assert_eq!(data, Some(len as i32 - 1 - i))
     }
-    println!("{:?}", stack);
+    println!("{stack:?}");
     // 查看栈是否为空
     assert_eq!(stack.get_len(), 0);
-    assert_eq!(stack.is_empty(), true);
+    assert!(stack.is_empty());
 }

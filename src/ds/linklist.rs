@@ -34,12 +34,12 @@ impl LinkNode {
                 let new_node = Rc::new(RefCell::new(new_node));
                 // 让new_node指向传入的node节点
                 new_node.borrow_mut().next = Some(Rc::clone(v));
-                return new_node;
+                new_node
             }
             None => {
                 let new_node = LinkNode::new(value);
-                let new_node = Rc::new(RefCell::new(new_node));
-                return new_node;
+                
+                Rc::new(RefCell::new(new_node))
             }
         }
     }
@@ -51,5 +51,5 @@ pub fn linklist_test() {
     for i in 1..5 {
         node = LinkNode::insert_to_front(&mut Some(Rc::clone(&node)), i);
     }
-    println!("{:#?}", node)
+    println!("{node:#?}")
 }

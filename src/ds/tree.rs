@@ -49,7 +49,7 @@ impl TreeNode {
         }
     }
     ///手动插入数据
-    pub fn insert(node: &NodeRef, value: i32, pos: InsertPosition) -> NodeRef {
+    pub fn insert(node: &NodeRef, value: i32, _pos: InsertPosition) -> NodeRef {
         match node {
             None => Some(Rc::new(RefCell::new(TreeNode::new(value)))),
             Some(v) => {
@@ -57,7 +57,7 @@ impl TreeNode {
                 // let new_node = Rc::new(RefCell::new(TreeNode::new(value)));
                 // 插入到左侧
                 let mut temp = v.borrow_mut();
-                temp.left = Self::insert(&temp.left, value, pos);
+                temp.left = Self::insert(&temp.left, value, _pos);
                 Some(Rc::clone(v))
                 // 返回节点
             }
@@ -82,28 +82,28 @@ impl TreeNode {
                 if let Some(v) = left {
                     let value = v.borrow();
                     println!("{} -> {} (left)", temp.value, value.value);
-                    deque.push_back(Rc::clone(&v));
+                    deque.push_back(Rc::clone(v));
                 }
                 // 有右节点就压入
                 if let Some(v) = right {
                     let value = v.borrow();
                     println!("{} -> {}(right)", temp.value, value.value);
-                    deque.push_back(Rc::clone(&v));
+                    deque.push_back(Rc::clone(v));
                 }
             }
         }
     }
     ///深度优先搜索
-    pub fn dfs(node: &NodeRef, arr: &mut Vec<Rc<RefCell<TreeNode>>>) {
+    pub fn dfs(node: &NodeRef, _arr: &mut Vec<Rc<RefCell<TreeNode>>>) {
         if let Some(v) = node {
             let value = v.borrow();
             if let Some(v) = &value.left {
                 let v = Rc::clone(v);
-                Self::dfs(&Some(v), arr);
+                Self::dfs(&Some(v), _arr);
             }
             if let Some(v) = &value.right {
                 let v = Rc::clone(v);
-                Self::dfs(&Some(v), arr);
+                Self::dfs(&Some(v), _arr);
             }
             println!("{}", value.value)
         }
@@ -122,16 +122,11 @@ impl TreeNode {
     }
     ///前序遍历
     pub fn pre_order(node: &NodeRef) {
-        match node {
-            Some(value) => {
-                let node = value.borrow();
-                print!("{} ", node.value);
-                TreeNode::pre_order(&node.left);
-                TreeNode::pre_order(&node.right);
-            }
-            None => {
-                return;
-            }
+        if let Some(value) = node {
+            let node = value.borrow();
+            print!("{} ", node.value);
+            TreeNode::pre_order(&node.left);
+            TreeNode::pre_order(&node.right);
         }
     }
     ///中序遍历
@@ -186,14 +181,14 @@ impl TreeNode {
     pub fn deselialize(s: String) -> NodeRef {
         let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
         // 迭代器
-        let mut iter = s.chars().peekable();
+        let iter = s.chars().peekable();
         let mut temp = "".to_string();
         // 用于标注插入的位置
         let mut _pos = InsertPosition::Left;
         // 用于存储最后一个元素
         let mut last_node = None;
 
-        while let Some(c) = iter.next() {
+        for c in iter {
             match c {
                 // 如果是数字
                 '0'..='9' => {
@@ -205,19 +200,16 @@ impl TreeNode {
                     temp.clear();
                     let treenode: TreeNode = TreeNode::new(node_value);
                     let treenode = Rc::new(RefCell::new(treenode));
-                    match stack.last() {
-                        Some(node) => {
-                            let mut node_mut = node.borrow_mut();
-                            match _pos {
-                                InsertPosition::Left => {
-                                    node_mut.left = Some(treenode.clone());
-                                }
-                                InsertPosition::Right => {
-                                    node_mut.right = Some(treenode.clone());
-                                }
+                    if let Some(node) = stack.last() {
+                        let mut node_mut = node.borrow_mut();
+                        match _pos {
+                            InsertPosition::Left => {
+                                node_mut.left = Some(treenode.clone());
+                            }
+                            InsertPosition::Right => {
+                                node_mut.right = Some(treenode.clone());
                             }
                         }
-                        None => {}
                     }
                     stack.push(treenode.clone());
                     _pos = InsertPosition::Left;
@@ -231,19 +223,16 @@ impl TreeNode {
                     temp.clear();
                     let treenode: TreeNode = TreeNode::new(node_value);
                     let treenode = Rc::new(RefCell::new(treenode));
-                    match stack.last() {
-                        Some(node) => {
-                            let mut node_ref = node.borrow_mut();
-                            match _pos {
-                                InsertPosition::Left => {
-                                    node_ref.left = Some(treenode.clone());
-                                }
-                                InsertPosition::Right => {
-                                    node_ref.right = Some(treenode.clone());
-                                }
+                    if let Some(node) = stack.last() {
+                        let mut node_ref = node.borrow_mut();
+                        match _pos {
+                            InsertPosition::Left => {
+                                node_ref.left = Some(treenode.clone());
+                            }
+                            InsertPosition::Right => {
+                                node_ref.right = Some(treenode.clone());
                             }
                         }
-                        None => {}
                     }
                     // 查看传入的节点
                     _pos = InsertPosition::Right;
@@ -258,24 +247,21 @@ impl TreeNode {
                     let treenode: TreeNode = TreeNode::new(node_value);
                     let treenode = Rc::new(RefCell::new(treenode));
                     // 查看传入的节点
-                    match stack.last() {
-                        Some(node) => {
-                            let mut node_ref = node.borrow_mut();
-                            match _pos {
-                                InsertPosition::Left => {
-                                    node_ref.left = Some(treenode.clone());
-                                }
-                                InsertPosition::Right => {
-                                    node_ref.right = Some(treenode.clone());
-                                }
+                    if let Some(node) = stack.last() {
+                        let mut node_ref = node.borrow_mut();
+                        match _pos {
+                            InsertPosition::Left => {
+                                node_ref.left = Some(treenode.clone());
+                            }
+                            InsertPosition::Right => {
+                                node_ref.right = Some(treenode.clone());
                             }
                         }
-                        None => {}
                     }
                     last_node = stack.pop();
                 }
                 _ => {
-                    println!("{}", c)
+                    println!("{c}")
                 }
             }
         }
@@ -331,11 +317,11 @@ pub fn serialize_deserialize_test() {
     }
     let mut s = "".to_string();
     let s1 = TreeNode::serialize(&node, &mut s);
-    println!("{}", s1);
+    println!("{s1}");
     let tree = TreeNode::deselialize(s1.clone());
     let mut s = "".to_string();
     let s2 = TreeNode::serialize(&tree, &mut s);
-    println!("{}", s2);
+    println!("{s2}");
     assert_eq!(s1, s2)
 }
 #[test]
@@ -348,11 +334,11 @@ pub fn _test() {
         }
         let mut s = "".to_string();
         let s1 = TreeNode::serialize(&node, &mut s);
-        println!("{}", s1);
+        println!("{s1}");
         let tree = TreeNode::deselialize(s1.clone());
         let mut s = "".to_string();
         let s2 = TreeNode::serialize(&tree, &mut s);
-        println!("{}", s2);
+        println!("{s2}");
         assert_eq!(s1, s2)
     }
 }

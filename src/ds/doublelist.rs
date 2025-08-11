@@ -27,8 +27,8 @@ impl DoubleNode {
             // 如果当前节点有值，那么查找下一个节点
             Some(v) => {
                 let mut current = v.borrow_mut();
-                let new = DoubleNode::insert(&mut current.next, value, &Some(Rc::downgrade(v)));
-                return new;
+                
+                DoubleNode::insert(&mut current.next, value, &Some(Rc::downgrade(v)))
             }
             None => {
                 // 新建一个节点
@@ -39,7 +39,7 @@ impl DoubleNode {
                 }
                 let temp = Rc::new(RefCell::new(new_node));
                 *node = Some(Rc::clone(&temp));
-                return temp;
+                temp
             }
         }
     }
@@ -52,5 +52,5 @@ pub fn insert() {
         let new_node = DoubleNode::insert(&mut head, i, &last);
         last = Some(Rc::downgrade(&new_node));
     }
-    println!("{:#?}", head);
+    println!("{head:#?}");
 }
