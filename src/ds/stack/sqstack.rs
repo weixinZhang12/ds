@@ -25,7 +25,7 @@ impl SqStack {
             return None;
         }
         self.top -= 1;
-        return self.data[self.top].take();
+        self.data[self.top].take()
     }
     pub fn first(&self) -> Option<&i32> {
         if let Some(v) = &self.data[0] {
@@ -42,7 +42,7 @@ impl SqStack {
         Ok(())
     }
     pub fn get_len(&self) -> usize {
-        return self.top;
+        self.top
     }
     pub fn is_empty(&self) -> bool {
         if self.top == 0 {
@@ -67,8 +67,8 @@ pub fn _test() {
         }
     }
     assert_eq!(stack.get_len(), MAXINDEX);
-    assert_eq!(stack.is_full(), true);
-    assert_eq!(stack.is_empty(), false);
+    assert!(stack.is_full());
+    assert!(!stack.is_empty());
     for i in 0..MAXINDEX as i32 {
         let data = stack.pop();
         // 检查弹出元素是否正确
@@ -76,7 +76,7 @@ pub fn _test() {
     }
     // 查看栈是否为空
     assert_eq!(stack.get_len(), 0);
-    assert_eq!(stack.is_empty(), true);
-    assert_eq!(stack.is_full(), false);
+    assert!(stack.is_empty());
+    assert!(!stack.is_full());
 
 }

@@ -25,12 +25,12 @@ impl LinkStack {
         self.node.as_ref()?;
         // 如果栈内只有一个节点
 
-        if let Some(node) = self.node.clone() {
-            if node.borrow().next.is_none() {
-                self.node.take();
-                self.len -= 1;
-                return Some(node.borrow().val);
-            }
+        if let Some(node) = self.node.clone()
+            && node.borrow().next.is_none()
+        {
+            self.node.take();
+            self.len -= 1;
+            return Some(node.borrow().val);
         }
         // 以下部分代表栈内至少有一个节点
         // 当前节点设置为头节点

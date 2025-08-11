@@ -32,6 +32,7 @@ impl SqQueue {
             Err(SqQueueError::Full)
         }
     }
+    ///弹出第一个元素
     pub fn pop(&mut self) -> Option<i32> {
         self.data[self.front]?;
         let res = self.data[self.front].take();
@@ -47,14 +48,13 @@ impl SqQueue {
     pub fn is_empty(&self) -> bool {
         if self.rear == self.front {
             self.data[self.front].is_none()
-        }
-        else {
+        } else {
             false
         }
     }
 }
 #[test]
-fn _test() {
+fn _sq_queue() {
     let mut queue = SqQueue::new();
     for i in 0..MAXINDEX as i32 {
         if let Err(e) = queue.push(i) {
@@ -62,7 +62,7 @@ fn _test() {
         }
     }
     println!("{queue:?}");
-    assert!(queue.is_full());    
+    assert!(queue.is_full());
     assert!(!queue.is_empty());
 
     for i in 0..MAXINDEX as i32 {
@@ -71,8 +71,6 @@ fn _test() {
     }
     println!("{queue:?}");
     assert!(queue.is_empty());
-    println!("{}",size_of::<Option<i32>>());   
-     println!("{}",size_of::<i32>());
-
-
+    println!("{}", size_of::<Option<i32>>());
+    println!("{}", size_of::<i32>());
 }

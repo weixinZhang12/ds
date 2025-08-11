@@ -2,19 +2,19 @@
 mod ds {
     pub mod doublelist;
     pub mod linklist;
-    pub mod tree;
-    mod stack{
-        pub mod sqstack;
+    mod stack {
         pub mod linkstack;
+        pub mod sqstack;
     }
-    mod queue{
+    mod queue {
         pub mod sd_queue;
+    }
+    pub mod trees {
+        pub mod tree;
     }
 }
 
 mod course {
     // pub mod serialize_deserialize;
 }
-fn main() {
-   
-}
+fn main() {}
