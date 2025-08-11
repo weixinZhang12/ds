@@ -22,28 +22,38 @@ impl LinkStack {
         Self { node: None, len: 0 }
     }
     pub fn pop(&mut self) -> Option<i32> {
+        // 如果栈内没有节点
+        if self.node.is_none() {
+            return None;
+        }
+        // 如果栈内只有一个节点
+
+        if let Some(node) = self.node.clone() {
+            if node.borrow().next.is_none() {
+                self.node.take();
+                self.len -= 1;
+                return Some(node.borrow().val);
+            }
+        }
+        // 以下部分代表栈内至少有一个节点
         // 当前节点设置为头节点
         let mut current_node = None;
-        let mut is_end = false;
-        let mut val = 0;
-        current_node=self.node.as_ref().and_then(|n|Some(n.clone()));
 
+        current_node = self.node.as_ref().and_then(|n| Some(n.clone()));
 
         // 如果当前节点还有节点那么继续
-        while let Some(v) = current_node.clone() {
-            let node_ref = v.borrow();
-            // 如果当前节点下一个节点为空
-            if node_ref.next.is_none() {
-                is_end = true;
-                val = node_ref.val;
-                break;
+        while let Some(current) = current_node {
+            let mut current_mut = current.borrow_mut();
+            if let Some(current_next_node) = current_mut.next.clone() {
+                let cur_next_ref = current_next_node.borrow();
+                if cur_next_ref.next.is_none() {
+                    let val = cur_next_ref.val;
+                    self.len -= 1;
+                    let next_node = current_mut.next.take();
+                    return Some(val);
+                }
             }
-            current_node = node_ref.next.clone();
-        }
-        if is_end {
-            let _ = current_node.take();
-            self.len -= 1;
-            return Some(val);
+            current_node = current_mut.next.clone();
         }
         None
     }
@@ -89,24 +99,22 @@ impl LinkStack {
 #[test]
 pub fn _test() {
     let mut stack = LinkStack::new();
-    const LEN:i32=2;
+    const LEN: i32 = 2;
     // 将栈添加满
     for i in 0..LEN {
         stack.push(i)
     }
     assert_eq!(stack.len, LEN as usize);
     println!("{:?}", stack);
-    // assert_eq!(stack.get_len(), MAXINDEX);
-    // assert_eq!(stack.is_full(), true);
-    // assert_eq!(stack.is_empty(), false);
-    let len=stack.get_len();
+    assert_eq!(stack.is_empty(), false);
+    let len = stack.get_len();
     for i in 0..LEN as i32 {
         let data = stack.pop();
         // 检查弹出元素是否正确
         assert_eq!(data, Some(len as i32 - 1 - i))
     }
+    println!("{:?}", stack);
     // // 查看栈是否为空
-    // assert_eq!(stack.get_len(), 0);
-    // assert_eq!(stack.is_empty(), true);
-    // assert_eq!(stack.is_full(), false);
+    assert_eq!(stack.get_len(), 0);
+    assert_eq!(stack.is_empty(), true);
 }
