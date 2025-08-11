@@ -35,7 +35,9 @@ impl LinkStack {
             if let None = node_ref.next {
                 is_end = true;
                 val = node_ref.val;
+                break;
             }
+            current_node=v.borrow().next.as_ref();
         }
         if is_end {
             let node = current_node.take();
@@ -44,15 +46,14 @@ impl LinkStack {
         }
         None
     }
-    // pub fn first(&self) -> Option<&i32> {
-    //     if let Some(v) = &self.data[0] {
-    //         return Some(v);
-    //     }
-    //     None
-    // }
+    pub fn first(&self) -> Option<Rc<RefCell<LinkStackNode>>> {
+        if let Some(v) = &self.node {
+            return Some(v.clone());
+        }
+        None
+    }
     pub fn push(&mut self, val: i32) {
-        let new_node = Rc::new(RefCell::new(LinkStackNode::new(val)));
-
+        let new_node: Rc<RefCell<LinkStackNode>> = Rc::new(RefCell::new(LinkStackNode::new(val)));
         let mut current_node = None;
         // 头节点没有,直接添加节点到头节点
         if let Some(v) = &self.node {
@@ -65,52 +66,44 @@ impl LinkStack {
         // 如果有节点,判断当前节点的下一个节点是否为空,为空就把新节点加到当前节点
         while let Some(node) = &current_node {
             let node = node.clone();
-            let mut node_borrow: std::cell::RefMut<'_, LinkStackNode> = node.borrow_mut();
+            let mut node_borrow = node.borrow_mut();
             if node_borrow.next.is_none() {
                 node_borrow.next = Some(new_node.clone());
-
                 break;
             }
-            if let Some(v) = &node_borrow.next {
-                current_node = Some(v.clone());
-            }
+            current_node = node_borrow.next.as_ref().and_then(|n| Some(n.clone()))
         }
-        // current_node = Some(&new_node);
         self.len += 1;
     }
     pub fn get_len(&self) -> usize {
         return self.len;
     }
-    // pub fn is_empty(&self) -> bool {
-    //     if self.top == 0 {
-    //         return true;
-    //     }
-    //     false
-    // }
-    // pub fn is_full(&self) -> bool {
-    //     if self.top == MAXINDEX {
-    //         return true;
-    //     }
-    //     false
-    // }
+    pub fn is_empty(&self) -> bool {
+        if self.len == 0 {
+            return true;
+        }
+        false
+    }
 }
 #[test]
 pub fn _test() {
     let mut stack = LinkStack::new();
+    const LEN:i32=2;
     // 将栈添加满
-    for i in 0..10 {
+    for i in 0..LEN {
         stack.push(i)
     }
-    assert_eq!(stack.len, 10);
-    println!("{:#?}", stack);
+    assert_eq!(stack.len, LEN as usize);
+    println!("{:?}", stack);
     // assert_eq!(stack.get_len(), MAXINDEX);
     // assert_eq!(stack.is_full(), true);
     // assert_eq!(stack.is_empty(), false);
-    // for i in 0..MAXINDEX as i32 {
-    //     let data = stack.pop();
-    //     // 检查弹出元素是否正确
-    //     assert_eq!(data, Some(MAXINDEX as i32 - 1 - i))
-    // }
+    let len=stack.get_len();
+    for i in 0..LEN as i32 {
+        let data = stack.pop();
+        // 检查弹出元素是否正确
+        assert_eq!(data, Some(len as i32 - 1 - i))
+    }
     // // 查看栈是否为空
     // assert_eq!(stack.get_len(), 0);
     // assert_eq!(stack.is_empty(), true);
