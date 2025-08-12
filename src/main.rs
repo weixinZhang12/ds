@@ -8,6 +8,7 @@ mod ds {
     }
     mod queue {
         pub mod sd_queue;
+        pub mod link_queue;
     }
     pub mod trees {
         pub mod tree;
