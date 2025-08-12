@@ -1,4 +1,7 @@
-use std::{cell::RefCell, rc::{Rc, Weak}};
+use std::{
+    cell::RefCell,
+    rc::{Rc, Weak},
+};
 
 type NodeRef = Option<Rc<RefCell<QueueNode>>>;
 type NodeWeakRef = Option<Weak<RefCell<QueueNode>>>;
@@ -46,16 +49,17 @@ impl LinkQueue {
     pub fn pop(&mut self) -> Option<i32> {
         // 将当前头节点取出来
         if let Some(node) = self.front.take() {
-             let node_ref = node.borrow();
+            let node_ref = node.borrow();
             let val = node_ref.val;
             // 将头节点指向下一个节点
-
             self.front = node_ref.next.clone();
             self.len -= 1;
-            if let Some(node_rear)=&self.rear
-                && Rc::ptr_eq(node_rear, &node){
-                    self.rear=self.front.clone();
-                }
+            // 当有节点和尾节点地址相同的时候尾节点也置空
+            if let Some(node_rear) = &self.rear
+                && Rc::ptr_eq(node_rear, &node)
+            {
+                self.rear = self.front.clone();
+            }
             return Some(val);
         }
         None
@@ -67,10 +71,13 @@ fn _link_queue() {
     for i in 0..5 {
         queue.push(i);
     }
+    assert!(queue.front.is_some());
+    assert!(queue.rear.is_some());
     for i in 0..5 {
-        let val=queue.pop();
-        assert_eq!(val,Some(i));
+        let val = queue.pop();
+        assert_eq!(val, Some(i));
     }
     println!("{queue:?}");
-    // println!("")
+    assert!(queue.front.is_none());
+    assert!(queue.rear.is_none());
 }
