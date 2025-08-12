@@ -6,7 +6,7 @@
         {
             "label": "pull",
             "type": "shell",
-            "command": "git pull",
+            "command": "bash .vscode/auto_git.sh",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
