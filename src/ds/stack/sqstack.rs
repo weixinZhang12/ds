@@ -8,15 +8,16 @@ pub enum StackError {
 }
 #[derive(Debug)]
 pub struct SqStack {
-    data: [Option<i32>; MAXINDEX],
+    data: [i32; MAXINDEX],
     top: usize,
 }
 
 impl SqStack {
     pub fn new() -> Self {
         Self {
-            data: [None; MAXINDEX],
+            data: [0; MAXINDEX],
             top: 0,
+            // len:0
         }
     }
 
@@ -25,11 +26,11 @@ impl SqStack {
             return None;
         }
         self.top -= 1;
-        self.data[self.top].take()
+        Some(self.data[self.top])
     }
     pub fn first(&self) -> Option<&i32> {
-        if let Some(v) = &self.data[0] {
-            return Some(v);
+        if self.top>0 {
+            return Some(&self.data[0]);
         }
         None
     }
@@ -37,7 +38,7 @@ impl SqStack {
         if self.top == MAXINDEX {
             return Err(StackError::Full);
         }
-        self.data[self.top] = Some(val);
+        self.data[self.top] = val;
         self.top += 1;
         Ok(())
     }

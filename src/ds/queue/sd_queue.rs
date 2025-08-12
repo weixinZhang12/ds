@@ -1,5 +1,7 @@
 use thiserror::Error;
 
+use crate::ds::stack;
+
 const MAXINDEX: usize = 10;
 #[derive(Debug, Error)]
 pub enum SqQueueError {
@@ -9,24 +11,28 @@ pub enum SqQueueError {
 #[derive(Debug)]
 // 并非最优实现，使用Option占用内存太大，推荐使用定义一个字段size
 pub struct SqQueue {
-    data: [Option<i32>; MAXINDEX],
+    data: [i32; MAXINDEX],
     front: usize,
     rear: usize,
+    len: usize,
 }
 
 impl SqQueue {
     pub fn new() -> Self {
         Self {
-            data: [None; MAXINDEX],
+            data: [0; MAXINDEX],
             front: 0,
             rear: 0,
+            len: 0,
         }
     }
+    ///向栈内添加元素
     pub fn push(&mut self, val: i32) -> Result<(), SqQueueError> {
         // 如果当前队尾指针为none，证明队列还没有满
-        if self.data[self.rear].is_none() {
-            self.data[self.rear] = Some(val);
+        if self.len < MAXINDEX {
+            self.data[self.rear] = val;
             self.rear = (self.rear + 1) % MAXINDEX;
+            self.len += 1;
             Ok(())
         } else {
             Err(SqQueueError::Full)
@@ -34,23 +40,26 @@ impl SqQueue {
     }
     ///弹出第一个元素
     pub fn pop(&mut self) -> Option<i32> {
-        self.data[self.front]?;
-        let res = self.data[self.front].take();
+        // 队头为空直接返回
+        if self.len == 0 {
+            return None;
+        }
+        let res = self.data[self.front];
+        self.data[self.front] = 0;
         self.front = (self.front + 1) % MAXINDEX;
-        res
+        self.len -= 1;
+        Some(res)
     }
+    ///查看栈是否已经满了
     pub fn is_full(&self) -> bool {
-        if self.rear == self.front {
-            return self.data[self.rear].is_some();
+        if self.len == MAXINDEX {
+            return true;
         }
         false
     }
+    ///查看栈是否为空
     pub fn is_empty(&self) -> bool {
-        if self.rear == self.front {
-            self.data[self.front].is_none()
-        } else {
-            false
-        }
+        self.len == 0
     }
 }
 #[test]
@@ -61,7 +70,7 @@ fn _sq_queue() {
             println!("{e}")
         }
     }
-    println!("{queue:?}");
+    println!("full: {queue:?}");
     assert!(queue.is_full());
     assert!(!queue.is_empty());
 
@@ -69,8 +78,17 @@ fn _sq_queue() {
         let val = queue.pop();
         assert_eq!(val, Some(i));
     }
-    println!("{queue:?}");
+    println!("empty:{queue:?}");
     assert!(queue.is_empty());
-    println!("{}", size_of::<Option<i32>>());
-    println!("{}", size_of::<i32>());
+    if let Err(e) = queue.push(1) {
+        println!("{e}")
+    }
+    assert_eq!(queue.data[0],1);
+    if let Err(e) = queue.push(2) {
+        println!("{e}")
+    }
+    assert_eq!(queue.data[1],2);
+
+    println!("can_cycle:{queue:?}");
+
 }
