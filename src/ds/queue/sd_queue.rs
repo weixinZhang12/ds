@@ -1,6 +1,5 @@
 use thiserror::Error;
 
-use crate::ds::stack;
 
 const MAXINDEX: usize = 10;
 #[derive(Debug, Error)]
