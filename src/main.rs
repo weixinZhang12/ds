@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 mod ds {
-    pub mod linklist {
+    pub mod list {
         pub mod doublelist;
         pub mod linklist;
     }
@@ -14,6 +14,9 @@ mod ds {
     }
     pub mod trees {
         pub mod tree;
+    }
+    pub mod string {
+        pub mod sq_string;
     }
 }
 
