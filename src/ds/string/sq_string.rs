@@ -26,7 +26,8 @@ impl SString {
         }
     }
 
-    pub fn from(s: &str) -> Result<Self, SStringError> {
+    pub fn from<T: AsRef<str>>(s: T) -> Result<Self, SStringError> {
+        let s = s.as_ref();
         let slen = s.len();
         if slen > MAXINDEX {
             return Err(SStringError::TooLang);
@@ -40,7 +41,32 @@ impl SString {
             len: slen,
         })
     }
-    ///如果相等返回相等，不相等返回差异字符的索引
+    pub fn take_child_str(&self,index:usize,len:usize)->Option<&[char]>{
+        if index+len>MAXINDEX{
+            None
+        }
+        else {
+            Some(&self.data[index..index+len])
+        }
+    }
+    pub fn index(&self,s:SString)->Option<usize>{
+        let slen=s.len;
+        let self_len=self.len;
+        if slen>self_len{
+            return None;
+        }
+        for i in 0..self_len{
+            // 获取子串所有有效部分
+            let sc=s.take_child_str(0, slen)?;
+            // 从主串提取子串长度
+            let self_c=self.take_child_str(i, slen)?;
+            if sc==self_c{
+                return Some(i);
+            }
+        }
+        None
+    }
+    ///如果相等返回相等 `Euqal` ，不相等返回差异字符的索引 `UnEqual(index)`
     pub fn compare(&self, s: &SString) -> CompareResult {
         for i in 0..usize::max(self.len, s.len) {
             if self.data[i] != s.data[i] {
@@ -54,9 +80,13 @@ impl SString {
 fn sq_string() {
     let s1 = SString::new();
     let s2 = SString::from("1234567").unwrap();
+    let s3 = SString::from("67").unwrap();
     assert_eq!(s2.len, 7);
     println!("{s1:?}");
     println!("{s2:?}");
     let x = s1.compare(&s2);
+    assert_eq!(s2.take_child_str(0, 3),Some(&['1','2','3'][..]));
     assert_eq!(x, CompareResult::UnEqual(0));
+    let index=s2.index(s3);
+    assert_eq!(index,Some(5));
 }
