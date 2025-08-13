@@ -13,8 +13,9 @@ pub enum LStringError {
 #[derive(Debug)]
 
 pub struct LStringNode {
-    data: [char; 4],
-    next: NodeRef,
+    data: [char; 4], //16字节
+    next: NodeRef,   //8字节
+    len: usize,
 }
 
 impl LStringNode {
@@ -22,12 +23,14 @@ impl LStringNode {
         Self {
             data: ['\0'; 4],
             next: None,
+            len: 0,
         }
     }
     // 从rust 类型中转换
     pub fn from<T: AsRef<str>>(c: T) -> Result<Self, LStringError> {
         let c = c.as_ref();
-        if c.len() > 4 {
+        let clen = c.len();
+        if clen > 4 {
             return Err(LStringError::TooLang);
         }
         let mut ca = ['\0'; 4];
@@ -37,13 +40,21 @@ impl LStringNode {
         Ok(Self {
             data: ca,
             next: None,
+            len: clen,
         })
     }
     // 从[char;4]类型转换
     pub fn from_char4(ca: [char; 4]) -> Self {
+        let mut index = 0;
+        for c in ca {
+            if c != '\0' {
+                index += 1;
+            }
+        }
         Self {
             data: ca,
             next: None,
+            len: index,
         }
     }
     pub fn get_len(&self) -> usize {
@@ -60,9 +71,9 @@ impl LStringNode {
 #[derive(Debug)]
 
 pub struct LString {
-    next: NodeRef,
-    rear: NodeRef,
-    len: usize,
+    next: NodeRef, //8字节
+    rear: NodeRef, //8字节
+    len: usize,    //8字节
 }
 
 impl LString {
@@ -97,13 +108,13 @@ impl LString {
             return None;
         }
         let mut ca = ['\0'; 4];
-        let mut slice = "";
+        let mut _slice = "";
         if index + 4 < slen {
-            slice = &s[index..index + 4];
+            _slice = &s[index..index + 4];
         } else {
-            slice = &s[index..]
+            _slice = &s[index..]
         }
-        for (i, c) in slice.chars().enumerate() {
+        for (i, c) in _slice.chars().enumerate() {
             ca[i] = c
         }
         Some(ca)
@@ -122,10 +133,12 @@ impl LString {
                     let node = Rc::new(RefCell::new(LStringNode::from_char4(ss)));
 
                     if self.next.is_none() {
+                        self.len+=node.borrow().len;
                         self.next = Some(node.clone());
                         self.rear = Some(node)
                     } else if let Some(last_node) = self.rear.clone() {
                         let mut node_mut = last_node.borrow_mut();
+                        self.len+=node.borrow().len;
                         node_mut.next = Some(node.clone());
                         self.rear = Some(node)
                     }
@@ -142,7 +155,8 @@ impl LString {
 #[test]
 fn _lstring() {
     let mut ls = LString::new();
+    assert_eq!(ls.len,0);
     ls.push("0123456789");
-
-    println!("{ls:?}");
+    println!("{ls:#?}");
+    assert_eq!(ls.len,10);
 }
