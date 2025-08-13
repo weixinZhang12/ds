@@ -15,7 +15,7 @@ pub enum LStringError {
 pub struct LStringNode {
     data: [char; 4], //16字节
     next: NodeRef,   //8字节
-    len: usize,
+    len: usize,      //8字节
 }
 
 impl LStringNode {
@@ -133,12 +133,12 @@ impl LString {
                     let node = Rc::new(RefCell::new(LStringNode::from_char4(ss)));
 
                     if self.next.is_none() {
-                        self.len+=node.borrow().len;
+                        self.len += node.borrow().len;
                         self.next = Some(node.clone());
                         self.rear = Some(node)
                     } else if let Some(last_node) = self.rear.clone() {
                         let mut node_mut = last_node.borrow_mut();
-                        self.len+=node.borrow().len;
+                        self.len += node.borrow().len;
                         node_mut.next = Some(node.clone());
                         self.rear = Some(node)
                     }
@@ -155,8 +155,8 @@ impl LString {
 #[test]
 fn _lstring() {
     let mut ls = LString::new();
-    assert_eq!(ls.len,0);
+    assert_eq!(ls.len, 0);
     ls.push("0123456789");
     println!("{ls:#?}");
-    assert_eq!(ls.len,10);
+    assert_eq!(ls.len, 10);
 }
