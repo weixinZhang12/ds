@@ -41,7 +41,7 @@ impl SString {
             len: slen,
         })
     }
-    pub fn take_child_str(&self,index:usize,len:usize)->Option<&[char]>{
+    pub fn get_child_str(&self,index:usize,len:usize)->Option<&[char]>{
         if index+len>MAXINDEX{
             None
         }
@@ -57,9 +57,9 @@ impl SString {
         }
         for i in 0..self_len{
             // 获取子串所有有效部分
-            let sc=s.take_child_str(0, slen)?;
+            let sc=s.get_child_str(0, slen)?;
             // 从主串提取子串长度
-            let self_c=self.take_child_str(i, slen)?;
+            let self_c=self.get_child_str(i, slen)?;
             if sc==self_c{
                 return Some(i);
             }
@@ -85,7 +85,7 @@ fn sq_string() {
     println!("{s1:?}");
     println!("{s2:?}");
     let x = s1.compare(&s2);
-    assert_eq!(s2.take_child_str(0, 3),Some(&['1','2','3'][..]));
+    assert_eq!(s2.get_child_str(0, 3),Some(&['1','2','3'][..]));
     assert_eq!(x, CompareResult::UnEqual(0));
     let index=s2.index(s3);
     assert_eq!(index,Some(5));

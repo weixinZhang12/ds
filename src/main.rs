@@ -17,6 +17,7 @@ mod ds {
     }
     pub mod string {
         pub mod sq_string;
+        pub mod link_string;
     }
 }
 
