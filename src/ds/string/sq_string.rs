@@ -1,3 +1,4 @@
+
 use thiserror::Error;
 
 const MAXINDEX: usize = 10;
@@ -12,7 +13,7 @@ pub enum CompareResult {
     ///内部为不相等的字符索引
     UnEqual(usize),
 }
-#[derive(Debug)]
+#[derive(Debug,Clone, Copy)]
 pub struct SString {
     data: [char; MAXINDEX],
     len: usize,
@@ -75,18 +76,38 @@ impl SString {
         }
         CompareResult::Equal
     }
+    pub fn clear(&mut self){
+        self.data=['\0';MAXINDEX];
+        self.len=0;
+    }
+    pub fn push(&mut self,s:SString)->Result<(),SStringError>{
+        if self.len+s.len>MAXINDEX{
+            return  Err(SStringError::TooLang)
+        }
+        // 将s的字符复制到后面
+        for i in 0.. s.len{
+            self.data[self.len]=s.data[i];
+            self.len+=1;
+        }
+        Ok(())
+    }
+
 }
 #[test]
 fn sq_string() {
     let s1 = SString::new();
-    let s2 = SString::from("1234567").unwrap();
-    let s3 = SString::from("67").unwrap();
-    assert_eq!(s2.len, 7);
+    let mut s2 = SString::from("012").unwrap();
+    let s3 = SString::from("34").unwrap();
+    assert_eq!(s2.len, 3);
     println!("{s1:?}");
     println!("{s2:?}");
     let x = s1.compare(&s2);
-    assert_eq!(s2.get_child_str(0, 3),Some(&['1','2','3'][..]));
+    assert_eq!(s2.get_child_str(0, 3),Some(&['0','1','2'][..]));
     assert_eq!(x, CompareResult::UnEqual(0));
     let index=s2.index(s3);
-    assert_eq!(index,Some(5));
+    assert_eq!(index,None);
+    s2.push(s3).unwrap();
+    assert_eq!(s2.get_child_str(0, 5),Some(&['0','1','2','3','4'][..]));
+    assert_eq!(s2.get_child_str(0, 11),None);
+    assert_eq!(s2.get_child_str(0, 0),Some(&[][..]));
 }

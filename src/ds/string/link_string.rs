@@ -2,6 +2,8 @@ use std::{cell::RefCell, rc::Rc};
 
 use thiserror::Error;
 
+use crate::ds::string::sq_string::CompareResult;
+
 type NodeRef = Option<Rc<RefCell<LStringNode>>>;
 type LS = dyn AsRef<str>;
 #[derive(Debug, Error)]
@@ -119,6 +121,18 @@ impl LString {
         }
         Some(ca)
     }
+    pub fn compare(&self,s:&LString)->CompareResult{
+        let self_len=self.len;
+        let slen=s.len;
+        // 当两个字符串不相等的时候
+        if slen!=self_len{
+            return CompareResult::UnEqual( usize::min(self_len, slen)-1);
+        }
+        // let max=usize::max(slen, self_len);
+        
+        CompareResult::Equal
+    }
+    ///
     pub fn push<T: AsRef<str>>(&mut self, s: T) {
         let s = s.as_ref();
         let mut index = 0;
