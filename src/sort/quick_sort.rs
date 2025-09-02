@@ -22,10 +22,15 @@ pub fn quick_sort(arr: &mut [i32]) {
     quick_sort(&mut arr[left + 1..len]);
 }
 
-
 #[test]
 fn test() {
-    let mut arr = [2, 3, 9, 1, 3, 2, 5, 7, 65,45,34,3,34,3,43,4,4,2,6,5,7,7,8,7,57,4,43,5,7,6,64,54,3,34,54,56,7,5,56,46,4,4,5,54,6,565,67,657,56,54,6,545,4,54,5,4,54,54,5,4,5434347,6,86,4,65,6,54,56,5456];
-    quick_sort(&mut arr);
-    println!("{:?}", arr)
+    for _ in 0..1000 {
+        let mut arr = [0; 10];
+        rand::fill(&mut arr);
+        let mut target = arr;
+        target.sort();
+        quick_sort(&mut arr);
+        assert_eq!(arr, target);
+        println!("{:?}", arr)
+    }
 }
