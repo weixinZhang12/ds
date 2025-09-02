@@ -7,8 +7,9 @@ pub fn quick_sort(arr: &mut [i32]) {
     let mut right = len - 1;
     // 取第一关元素作为privot
     let privot = arr[0];
+    // 当两个指针没有重合时就一直排序
     while left < right {
-        // 当右指针元素大与privot的时候直接向左移动，即right右边的元素一定大于privot
+        // 当右指针元素大与privot的时候直接向左移动，即right右边的元素一定大于privot，同时检查指针是否重合
         while arr[right] >= privot && left < right {
             right -= 1;
         }

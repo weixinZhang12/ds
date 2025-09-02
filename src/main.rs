@@ -23,6 +23,7 @@ mod ds {
 pub mod sort {
     pub mod quick_sort;
     pub mod insert_sort;
+    pub mod bubble_sort;
 }
 mod course {
     // pub mod serialize_deserialize;

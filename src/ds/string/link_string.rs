@@ -132,7 +132,6 @@ impl LString {
         
         CompareResult::Equal
     }
-    ///
     pub fn push<T: AsRef<str>>(&mut self, s: T) {
         let s = s.as_ref();
         let mut index = 0;

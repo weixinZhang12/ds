@@ -4,10 +4,13 @@ pub fn insert_sort(arr: &mut [i32]) {
         return;
     }
     let mut left = 0;
+    // 当left小于最后一个元素索引时就一直排序
     while left < len - 1 {
+        // 如果前面的元素大于后面的元素，就交换他们的位置
         if arr[left] > arr[left + 1] {
             arr.swap(left, left + 1);
             let mut j=left;
+            // 如果检查已排好序的区域是否需要重新调整
             while j>0&&arr[j-1]>arr[j] {
                 if arr[j] < arr[j-1] {
                     arr.swap(j, j -1);
