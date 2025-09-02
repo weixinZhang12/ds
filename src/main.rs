@@ -16,11 +16,13 @@ mod ds {
         pub mod tree;
     }
     pub mod string {
-        pub mod sq_string;
         pub mod link_string;
+        pub mod sq_string;
     }
 }
-
+pub mod sort {
+    pub mod quick_sort;
+}
 mod course {
     // pub mod serialize_deserialize;
 }
