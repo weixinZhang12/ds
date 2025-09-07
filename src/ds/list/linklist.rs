@@ -21,7 +21,7 @@ impl LinkNode {
             }
             // 如果运行到这里节点已经没有值了
             None => {
-                let new_node = LinkNode::new(value);
+                 let new_node = LinkNode::new(value);
                 *node = Some(Rc::new(RefCell::new(new_node)))
             }
         }
@@ -38,7 +38,6 @@ impl LinkNode {
             }
             None => {
                 let new_node = LinkNode::new(value);
-                
                 Rc::new(RefCell::new(new_node))
             }
         }

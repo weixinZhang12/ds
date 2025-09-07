@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(unused_variables)]
 mod ds {
     pub mod list {
         pub mod doublelist;
@@ -26,6 +27,6 @@ pub mod sort {
     pub mod bubble_sort;
 }
 mod course {
-    // pub mod serialize_deserialize;
+    pub mod simple_parser;
 }
 fn main() {}
