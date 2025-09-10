@@ -19,6 +19,10 @@
                     "kind": "bin"
                 }
             },
+            "expressions": "simple",
+            "preRunCommands": [
+                "command script import ${workspaceFolder}/.vscode/rust_prettifier_for_lldb.py"
+            ],
             "args": [],
             "cwd": "${workspaceFolder}"
         },
@@ -38,6 +42,10 @@
                     "kind": "bin"
                 }
             },
+            "expressions": "simple",
+            "preRunCommands": [
+                "command script import ${workspaceFolder}/.vscode/rust_prettifier_for_lldb.py"
+            ],
             "args": [],
             "cwd": "${workspaceFolder}"
         }
