@@ -84,8 +84,8 @@ pub fn to_expr_re<I: Iterator<Item = Token>>(iter: &mut Peekable<I>, min_power: 
 pub fn get_power(c: char) -> (f32, f32) {
     match c {
         '+' | '-' => (1., 1.1),
-        '*'|'/'=>(2.,2.1),
-        _ => panic!(),
+        '*' | '/' => (2., 2.1),
+        _ => panic!("Unknown character"),
     }
 }
 pub fn to_tokens(s: String) -> VecDeque<Token> {

@@ -28,5 +28,7 @@ pub mod sort {
 }
 mod course {
     pub mod simple_parser;
+    pub mod play;
+    pub mod ptr;
 }
 fn main() {}
