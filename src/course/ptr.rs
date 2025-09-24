@@ -8,7 +8,8 @@ fn test() {
         if ptr.is_null() {
             return;
         }
-        println!("{:?}",layouy);
+        println!("{:?}",layouy)
+        ;
         assert!(!ptr.is_null());
         ptr.write([1;8]);
         println!("normal ptr: {:?}",ptr.read());
