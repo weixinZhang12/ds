@@ -22,13 +22,16 @@ mod ds {
     }
 }
 pub mod sort {
-    pub mod quick_sort;
-    pub mod insert_sort;
     pub mod bubble_sort;
+    pub mod insert_sort;
+    pub mod quick_sort;
 }
 mod course {
-    pub mod simple_parser;
-    pub mod play;
+    pub mod error;
     pub mod ptr;
+    pub mod simple_parser;
+}
+mod ds_ptr {
+    pub mod vector;
 }
 fn main() {}

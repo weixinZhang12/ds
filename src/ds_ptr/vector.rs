@@ -3,12 +3,9 @@ use std::{
     ptr::NonNull,
 };
 
-use thiserror::Error;
-#[derive(Error, Debug)]
-pub enum DataStructErr {
-    #[error("无效的索引")]
-    InvalidIndex,
-}
+use crate::course::error::DataStructErr;
+
+
 #[derive(Debug)]
 pub struct Vector {
     len: usize,
@@ -46,6 +43,17 @@ impl Vector {
         unsafe {
             let end = prt.add(index);
             end.as_ref()
+        }
+    }
+     ///获取索引处的值
+    pub fn get_mut(&mut self, index: usize) -> Option<&mut i32> {
+        if index >= self.len {
+            return None;
+        }
+        let prt = self.data.as_ptr();
+        unsafe {
+            let end = prt.add(index);
+            end.as_mut()
         }
     }
     ///设置索引处的值，如果传入无效索引
@@ -90,11 +98,13 @@ impl Vector {
         }
         // 长度-1
         self.len-=1;
+        //向左移动元素
         for i in index..self.len - 1 {
             self.swap(i, i + 1);
         }
         Some(temp)
     }
+    ///将空间设置原原来的2倍
     pub fn grow(&mut self) {
         let new_cap = self.cap * 2;
         let new_layout = Layout::array::<i32>(new_cap).expect("fail");
@@ -106,7 +116,7 @@ impl Vector {
             self.cap = new_cap;
         }
     }
-
+    ///打印信息
     pub fn print(&self) {
         let ptr = self.data.as_ptr();
         for i in 0..self.len {
@@ -128,11 +138,10 @@ impl Drop for Vector {
 #[test]
 fn test() {
     let mut v = Vector::new();
-    for i in 0..100 {
+    for i in 0..3 {
         v.push(i);
     }
-    // v.swap(0, 1);
-    v.print();
     let vals=v.delete(2);
+    dbg!(&v);
     v.print();
 }
