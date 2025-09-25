@@ -3,7 +3,12 @@ use std::{
     ptr::NonNull,
 };
 
-use rand::seq::index;
+use thiserror::Error;
+#[derive(Error, Debug)]
+pub enum DataStructErr {
+    #[error("无效的索引")]
+    InvalidIndex,
+}
 #[derive(Debug)]
 pub struct Vector {
     len: usize,
@@ -12,7 +17,7 @@ pub struct Vector {
 }
 impl Vector {
     pub fn new() -> Self {
-        let layout = Layout::array::<i32>(5).expect("Invalid memory");
+        let layout = Layout::array::<i32>(5).expect("Invalid memory layout");
         let ptr = unsafe { alloc(layout) as *mut i32 };
         let non_ptr = NonNull::new(ptr).expect("falid");
         Self {
@@ -21,6 +26,7 @@ impl Vector {
             cap: 5,
         }
     }
+    // 在末尾添加值
     pub fn push(&mut self, val: i32) {
         if self.len == self.cap {
             self.grow();
@@ -42,33 +48,52 @@ impl Vector {
             end.as_ref()
         }
     }
-    pub fn set(&mut self, index: usize, val: i32) {
+    ///设置索引处的值，如果传入无效索引
+    pub fn set(&mut self, index: usize, val: i32) -> Result<(), DataStructErr> {
         if index >= self.len {
-            return;
+            return Err(DataStructErr::InvalidIndex);
         }
         unsafe {
             let end = self.data.as_ptr().add(index);
             end.write(val);
         }
+        Ok(())
     }
     ///交换索引处的值，当索引不正确的时候直接忽略该该次操作
     pub fn swap(&mut self, i1: usize, i2: usize) {
         if i1 >= self.len || i2 >= self.len {
             return;
         }
-        let mut _temp = 0;
-        _temp = *self.get(i1).unwrap();
+        let _temp = *self.get(i1).unwrap();
         let i2_val = self.get(i2).unwrap();
-        self.set(i1, *i2_val);
-        self.set(i2, _temp);
+        self.set(i1, *i2_val).unwrap();
+        self.set(i2, _temp).unwrap();
     }
     pub fn delete(&mut self, index: usize) -> Option<i32> {
         //获取当前表的长度，索引是否小于表长度
         if index >= self.len {
             return None;
         }
+        // 当只有一个元素的时候
+        let temp = unsafe {
+            let end = self.data.add(index);
+            let temp=end.read();
+            end.write(0);
+            dbg!(temp);
+            temp
 
-        todo!()
+        };
+        // 当只有一个元素的时候
+        if self.len == 1 {
+            self.len = 0;
+            return Some(temp);
+        }
+        // 长度-1
+        self.len-=1;
+        for i in index..self.len - 1 {
+            self.swap(i, i + 1);
+        }
+        Some(temp)
     }
     pub fn grow(&mut self) {
         let new_cap = self.cap * 2;
@@ -84,7 +109,6 @@ impl Vector {
 
     pub fn print(&self) {
         let ptr = self.data.as_ptr();
-
         for i in 0..self.len {
             unsafe {
                 let data = ptr.add(i).as_ref().unwrap();
@@ -104,12 +128,11 @@ impl Drop for Vector {
 #[test]
 fn test() {
     let mut v = Vector::new();
-    for i in 0..15 {
+    for i in 0..100 {
         v.push(i);
     }
-    v.swap(0, 1);
+    // v.swap(0, 1);
     v.print();
-    let val = v.get(1);
-    println!("{}", val.unwrap());
-    println!("{:?}", v);
+    let vals=v.delete(2);
+    v.print();
 }
