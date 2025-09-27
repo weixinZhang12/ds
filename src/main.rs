@@ -33,5 +33,6 @@ mod course {
 }
 mod ds_ptr {
     pub mod vector;
+    pub mod auto_ptr;
 }
 fn main() {}
