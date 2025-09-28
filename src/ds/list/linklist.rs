@@ -13,7 +13,7 @@ impl LinkNode {
     pub fn new(value: i32) -> Self {
         Self { value, next: None }
     }
-    pub fn insert(node: &mut NodeRef, value: i32) {
+    pub fn insert(node: &mut NodeRef, value: i32)->NodeRef {
         // 如果当前节点有值，那么就进入下一个节点
         match node {
             Some(v) => {
@@ -25,6 +25,7 @@ impl LinkNode {
                 *node = Some(Rc::new(RefCell::new(new_node)))
             }
         }
+        node.clone()
     }
     ///在头部插入
     pub fn insert_to_front(node: &mut NodeRef, value: i32) -> Rc<RefCell<LinkNode>> {
@@ -46,9 +47,9 @@ impl LinkNode {
 #[test]
 pub fn linklist_test() {
     let node = LinkNode::new(0);
-    let mut node = Rc::new(RefCell::new(node));
+    let mut node =Some( Rc::new(RefCell::new(node)));
     for i in 1..5 {
-        node = LinkNode::insert_to_front(&mut Some(Rc::clone(&node)), i);
+        node = LinkNode::insert(&mut node, i);
     }
     println!("{node:#?}")
 }
